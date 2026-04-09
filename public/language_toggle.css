@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap');
+
+.lang-am, .lang-am * {
+  font-family: 'Noto Sans Ethiopic', sans-serif !important;
+}
+
+.lang-am p, .lang-am li, .lang-am div {
+  line-height: 1.8 !important;
+}
+
+.lang-am h1, .lang-am h2, .lang-am h3, .lang-am h4 {
+  line-height: 1.4 !important;
+  letter-spacing: normal !important;
+}
+
+@keyframes langSwapFlash {
+  0%   { opacity: 1; }
+  30%  { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+*[data-en], *[data-am] {
+  transition: opacity 0.2s ease;
+}
+
+.language-swapping {
+  animation: langSwapFlash 0.3s ease-in-out;
+}
