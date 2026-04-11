@@ -26,7 +26,7 @@ const notoSansEthiopic = Noto_Sans_Ethiopic({
 
 export const metadata: Metadata = {
   title: 'Holistic Specialty Dental Clinic | Best Dentist in Addis Ababa',
-  description: 'Trusted by 5,100+ patients. Holistic dental care in Addis Ababa — teeth whitening, implants, braces & more. Book your appointment today!',
+  description: 'Trusted by 5,100+ patients. General dental care in Addis Ababa — teeth whitening, implants, braces & more. Book your appointment today!',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

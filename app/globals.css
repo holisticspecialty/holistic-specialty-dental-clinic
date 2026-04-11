@@ -6,6 +6,7 @@
   --color-brand-primary: #2E3488;
   --color-brand-text: #1A1A1A;
   --color-brand-accent: #1A9393;
+  --color-white: #FAFAFA;
   
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
@@ -25,7 +26,34 @@ body.lang-am .font-sans {
   font-family: var(--font-am-sans);
 }
 
+/* 
+  Noto Ethiopic renders visually smaller than Inter/Playfair. 
+  By overriding Tailwind's text size utilities when Amharic is active, 
+  we scale the font up by ~15% to visually match the English layout.
+*/
+body.lang-am .text-xs { font-size: 0.86rem; }
+body.lang-am .text-sm { font-size: 1rem; }
+body.lang-am .text-base { font-size: 1.15rem; }
+body.lang-am .text-lg { font-size: 1.29rem; }
+body.lang-am .text-xl { font-size: 1.43rem; }
+body.lang-am .text-2xl { font-size: 1.72rem; }
+body.lang-am .text-3xl { font-size: 2.15rem; }
+body.lang-am .text-4xl { font-size: 2.58rem; }
+body.lang-am .text-5xl { font-size: 3.45rem; }
+body.lang-am .text-6xl { font-size: 4.31rem; }
+body.lang-am .text-[13px] { font-size: 15px; } /* Custom sizes used in header */
+body.lang-am .text-[1.15rem] { font-size: 1.32rem; }
+body.lang-am .text-[1.35rem] { font-size: 1.55rem; }
+
 body {
   background-color: var(--color-brand-bg);
   color: var(--color-brand-text);
+}
+
+/* Hide the Next.js 15 'N' Dev Indicator */
+nextjs-portal {
+  display: none !important;
+}
+nextjs-dev-tools {
+  display: none !important;
 }

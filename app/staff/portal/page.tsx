@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { supabase, type Appointment } from '@/lib/supabase';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const STATUS_CONFIG = {
   pending: { label: 'Pending', color: 'bg-amber-50 text-amber-700 border-amber-200', icon: AlertCircle },
@@ -34,12 +35,12 @@ export default function StaffPortalPage() {
   const [updating, setUpdating] = useState<string | null>(null);
 
   const checkAuth = useCallback(async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
       router.push('/staff');
       return false;
     }
-    setStaffEmail(session.user.email ?? '');
+    setStaffEmail(user.email ?? '');
     return true;
   }, [router]);
 
@@ -99,19 +100,22 @@ export default function StaffPortalPage() {
           <div className="flex items-center gap-3">
             <Image src="/logo.svg" alt="Logo" width={36} height={36} className="w-9 h-9" />
             <div>
-              <span className="font-serif text-[1rem] text-brand-primary font-bold">HOLISTIC</span>{' '}
-              <span className="font-serif text-[1rem] italic text-brand-accent">SPECIALTY</span>
+              <span className="font-[family-name:var(--font-playfair)] text-[1rem] text-brand-primary font-bold">HOLISTIC</span>{' '}
+              <span className="font-[family-name:var(--font-playfair)] text-[1rem] italic text-brand-accent">SPECIALTY</span>
               <div className="text-[10px] text-gray-400 uppercase tracking-widest -mt-0.5">Staff Portal</div>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={fetchAppointments} className="p-2 hover:bg-gray-100 rounded-xl transition-colors" title="Refresh">
+            <Link href="/" className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-gray-500 hover:text-brand-primary transition-colors border border-gray-200 rounded-full hover:border-brand-primary">
+              ← Home
+            </Link>
+            <button onClick={fetchAppointments} className="p-2 hover:bg-gray-100 rounded-full transition-colors" title="Refresh">
               <RefreshCw className="w-4 h-4 text-gray-400" />
             </button>
             <span className="hidden sm:block text-xs text-gray-400">{staffEmail}</span>
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 hover:text-red-500 transition-colors border border-gray-200 rounded-xl hover:border-red-200"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 hover:text-red-500 transition-colors border border-gray-200 rounded-full hover:border-red-200"
             >
               <LogOut className="w-3.5 h-3.5" /> Sign Out
             </button>

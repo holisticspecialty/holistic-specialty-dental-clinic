@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, CheckCircle, Leaf, Clock, Phone, Calendar } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { validateBookingForm, checkRateLimit, recordSubmission } from '@/lib/validation';
 
 const SERVICES = [
   'General Consultation',
@@ -64,9 +65,43 @@ export default function BookPage() {
     setLoading(true);
     setError('');
 
+    // Rate limit check
+    const rateCheck = checkRateLimit();
+    if (!rateCheck.allowed) {
+      setError(`Please wait ${rateCheck.waitSeconds} seconds before submitting again.`);
+      setLoading(false);
+      return;
+    }
+
+    // Validate all fields
+    const validationErrors = validateBookingForm({
+      full_name: form.full_name,
+      email: form.email,
+      phone: form.phone,
+      service: form.service,
+      preferred_date: form.preferred_date,
+      preferred_time: form.preferred_time,
+      message: form.message,
+    });
+    const firstError = Object.values(validationErrors)[0];
+    if (firstError) {
+      setError(firstError);
+      setLoading(false);
+      return;
+    }
+
     const { error: sbError } = await supabase
       .from('appointments')
-      .insert([{ ...form, status: 'pending' }]);
+      .insert([{
+        full_name: form.full_name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        service: form.service,
+        preferred_date: form.preferred_date,
+        preferred_time: form.preferred_time,
+        message: form.message?.trim() || null,
+        status: 'pending',
+      }]);
 
     if (sbError) {
       setError('Something went wrong. Please try again or call us directly.');
@@ -74,6 +109,7 @@ export default function BookPage() {
       return;
     }
 
+    recordSubmission();
     setSuccess(true);
     setLoading(false);
   };

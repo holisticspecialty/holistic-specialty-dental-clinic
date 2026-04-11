@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { motion } from 'motion/react';
 import { Phone, MapPin, ArrowRight, Clock, Leaf, Activity, Smile, Globe } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 const FADE_UP = {
   hidden: { opacity: 0, y: 20 },
@@ -21,14 +22,16 @@ const STAGGER = {
 };
 
 export default function Home() {
+  const [showMap, setShowMap] = useState(false);
+
   return (
     <main className="min-h-screen">
 
       {/* HERO SECTION */}
       <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 min-h-screen flex items-center w-full overflow-hidden">
         {/* Faded Background Image */}
-        <div className="absolute top-0 right-0 bottom-0 w-full lg:w-[60%] z-0 pointer-events-none">
-          <div className="absolute inset-0 bg-[url('/hero%20image.png')] bg-cover bg-center opacity-30 [mask-image:linear-gradient(to_right,transparent_0%,black_100%)] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_60%)]" />
+        <div className="absolute top-[72px] right-0 bottom-0 w-full lg:w-[60%] z-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[url('/Hero.png')] bg-cover bg-center opacity-30 [mask-image:linear-gradient(to_right,transparent_0%,black_100%)] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_60%)]" />
         </div>
 
         <div className="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-10">
@@ -37,10 +40,10 @@ export default function Home() {
             <motion.div 
               variants={FADE_UP} 
               className="inline-flex items-center gap-2 text-brand-primary text-xs font-bold tracking-widest uppercase mb-4"
-              data-en="HOLISTIC DENTAL CARE"
-              data-am="ሁሉን አቀፍ የጥርስ ሕክምና"
+              data-en="GENERAL DENTAL CARE"
+              data-am="አጠቃላይ የጥርስ ሕክምና"
             >
-              HOLISTIC DENTAL CARE
+              GENERAL DENTAL CARE
             </motion.div>
             
             <motion.h1 
@@ -73,7 +76,7 @@ export default function Home() {
                 Book your appointment <ArrowRight className="ml-2 w-4 h-4" />
               </Link>
               <Link 
-                href="#services"
+                href="/services"
                 className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-200 text-brand-text text-sm font-medium rounded-full hover:bg-gray-50 transition-colors"
                 data-en="Our Biological Services"
                 data-am="የባዮሎጂያዊ አገልግሎቶቻችን"
@@ -123,7 +126,7 @@ export default function Home() {
             className="relative"
           >
             <div className="aspect-[4/5] bg-gray-100 rounded-sm overflow-hidden relative">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1606811841689-23dfddce3e95?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center" />
+              <div className="absolute inset-0 bg-[url('/About.png')] bg-cover bg-center" />
             </div>
             {/* Quote Card */}
             <div className="absolute -bottom-8 -right-4 md:-right-12 bg-white p-6 md:p-8 shadow-xl shadow-black/5 max-w-xs border border-gray-50">
@@ -442,17 +445,18 @@ export default function Home() {
 
       {/* CONTACT SECTION */}
       <section id="contact" className="py-24 lg:py-32 px-6 md:px-12 bg-brand-bg">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+        <div className="max-w-7xl mx-auto">
           
           <motion.div 
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
             variants={STAGGER}
+            className="flex flex-col items-center text-center"
           >
             <motion.h2 
               variants={FADE_UP} 
-              className="font-serif text-4xl md:text-5xl mb-6 text-brand-text leading-tight"
+              className="font-serif text-4xl md:text-5xl mb-6 text-brand-text leading-tight max-w-3xl"
               data-en="Your Journey Toward Systemic Health Begins with a Conversation."
               data-am="የሙሉ ጤና ጉዞዎ በሚደረግ ውይይት ይጀምራል።"
             >
@@ -460,118 +464,139 @@ export default function Home() {
             </motion.h2>
             <motion.p 
               variants={FADE_UP} 
-              className="text-gray-500 font-light text-lg mb-12 max-w-md"
+              className="text-gray-500 font-light text-lg mb-16 max-w-2xl"
               data-en="Our clinical team is prepared to facilitate your transition to biological dental care. Secure your initial evaluation today and join the 5,100+ patients who entrust their smiles to Holistic Specialty Dental Clinic."
               data-am="የሕክምና ቡድናችን ወደ ባዮሎጂያዊ የጥርስ ሕክምና የሚያደርጉትን ሽግግር ለማገዝ ዝግጁ ነው። የመጀመሪያ ደረጃ ግምገማዎን ዛሬውኑ ያረጋግጡ እና ፈገግታቸውን ለሆሊስቲክ ስፔሻሊቲ የጥርስ ሕክምና ክሊኒክ አደራ ከሰጡ 5,100 በላይ ታካሚዎች ጋር ይቀላቀሉ።"
             >
               Our clinical team is prepared to facilitate your transition to biological dental care. Secure your initial evaluation today and join the 5,100+ patients who entrust their smiles to Holistic Specialty Dental Clinic.
             </motion.p>
+          </motion.div>
 
-            <motion.div variants={FADE_UP} className="space-y-8 mb-12">
-              <div className="flex items-start">
-                <div className="w-10 h-10 rounded-full bg-brand-surface flex items-center justify-center mr-4 shrink-0">
-                  <MapPin className="w-4 h-4 text-brand-primary" />
-                </div>
-                <div>
-                  <h4 
-                    className="text-xs font-bold tracking-widest uppercase text-brand-text mb-1"
-                    data-en="LOCATION"
-                    data-am="አድራሻ"
-                  >
-                    LOCATION
-                  </h4>
-                  <p 
-                    className="text-gray-500 font-light text-sm leading-relaxed"
-                    data-en="Soreti Building – 2nd Floor, Summit Addis Ababa, Ethiopia"
-                    data-am="ሶሬቲ ህንፃ – 2ኛ ፎቅ፣ ሰሚት አዲስ አበባ፣ ኢትዮጵያ"
-                  >
-                    Soreti Building – 2nd Floor, Summit<br />
-                    Addis Ababa, Ethiopia
-                  </p>
-                </div>
+          <motion.div 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={STAGGER}
+            className="grid md:grid-cols-3 gap-8 lg:gap-12 mb-16"
+          >
+            <motion.div variants={FADE_UP} className="flex flex-col items-center text-center p-8 bg-white rounded-sm shadow-sm border border-gray-50">
+              <div className="w-12 h-12 rounded-full bg-brand-surface flex items-center justify-center mb-6">
+                <MapPin className="w-5 h-5 text-brand-primary" />
               </div>
-              
-              <div className="flex items-start">
-                <div className="w-10 h-10 rounded-full bg-brand-surface flex items-center justify-center mr-4 shrink-0">
-                  <Phone className="w-4 h-4 text-brand-primary" />
-                </div>
-                <div>
-                  <h4 
-                    className="text-xs font-bold tracking-widest uppercase text-brand-text mb-1"
-                    data-en="COMMUNICATION"
-                    data-am="መገናኛ"
-                  >
-                    COMMUNICATION
-                  </h4>
-                  <p className="text-gray-500 font-light text-sm leading-relaxed">
-                    +251 92 222 0646<br />
-                    +251 93 201 1004
-                  </p>
-                </div>
+              <h4 
+                className="text-xs font-bold tracking-widest uppercase text-brand-text mb-3"
+                data-en="LOCATION"
+                data-am="አድራሻ"
+              >
+                LOCATION
+              </h4>
+              <p 
+                className="text-gray-500 font-light text-sm leading-relaxed"
+                data-allow-html="true"
+                data-en="Soreti Building – 2nd Floor, Summit<br />Addis Ababa, Ethiopia"
+                data-am="ሶሬቲ ህንፃ – 2ኛ ፎቅ፣ ሰሚት<br />አዲስ አበባ፣ ኢትዮጵያ"
+              >
+                Soreti Building – 2nd Floor, Summit<br />
+                Addis Ababa, Ethiopia
+              </p>
+            </motion.div>
+            
+            <motion.div variants={FADE_UP} className="flex flex-col items-center text-center p-8 bg-white rounded-sm shadow-sm border border-gray-50">
+              <div className="w-12 h-12 rounded-full bg-brand-surface flex items-center justify-center mb-6">
+                <Phone className="w-5 h-5 text-brand-primary" />
               </div>
-
-              <div className="flex items-start">
-                <div className="w-10 h-10 rounded-full bg-brand-surface flex items-center justify-center mr-4 shrink-0">
-                  <Clock className="w-4 h-4 text-brand-primary" />
-                </div>
-                <div>
-                  <h4 
-                    className="text-xs font-bold tracking-widest uppercase text-brand-text mb-1"
-                    data-en="CLINICAL HOURS"
-                    data-am="የሥራ ሰዓት"
-                  >
-                    CLINICAL HOURS
-                  </h4>
-                  <p 
-                    className="text-gray-500 font-light text-sm leading-relaxed"
-                    data-en="Mon – Sat: 8:00 AM – 6:00 PM Sunday: Closed"
-                    data-am="ከሰኞ - ቅዳሜ፡ ከጠዋቱ 2፡00 - ከሰዓት 12፡00 እሁድ፡ ዝግ ነው"
-                  >
-                    Mon – Sat: 8:00 AM – 6:00 PM<br />
-                    Sunday: Closed
-                  </p>
-                </div>
-              </div>
+              <h4 
+                className="text-xs font-bold tracking-widest uppercase text-brand-text mb-3"
+                data-en="COMMUNICATION"
+                data-am="መገናኛ"
+              >
+                COMMUNICATION
+              </h4>
+              <p className="text-gray-500 font-light text-sm leading-relaxed">
+                +251 92 222 0646<br />
+                +251 93 201 1004
+              </p>
             </motion.div>
 
-            <motion.div variants={FADE_UP} className="flex flex-col sm:flex-row gap-4">
-              <button 
-                className="px-8 py-3.5 bg-brand-primary text-white text-sm font-medium rounded-md hover:bg-brand-primary/90 transition-colors"
-                data-en="Book your appointment"
-                data-am="ቀጠሮ ይያዙ"
+            <motion.div variants={FADE_UP} className="flex flex-col items-center text-center p-8 bg-white rounded-sm shadow-sm border border-gray-50">
+              <div className="w-12 h-12 rounded-full bg-brand-surface flex items-center justify-center mb-6">
+                <Clock className="w-5 h-5 text-brand-primary" />
+              </div>
+              <h4 
+                className="text-xs font-bold tracking-widest uppercase text-brand-text mb-3"
+                data-en="CLINICAL HOURS"
+                data-am="የሥራ ሰዓት"
               >
-                Book your appointment
-              </button>
+                CLINICAL HOURS
+              </h4>
+              <p 
+                className="text-gray-500 font-light text-sm leading-relaxed"
+                data-en="Mon – Sat: 8:00 AM – 6:00 PM Sunday: Closed"
+                data-am="ከሰኞ - ቅዳሜ፡ ከጠዋቱ 2፡00 - ከሰዓት 12፡00 እሁድ፡ ዝግ ነው"
+              >
+                Mon – Sat: 8:00 AM – 6:00 PM<br />
+                Sunday: Closed
+              </p>
             </motion.div>
           </motion.div>
 
           <motion.div 
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial="hidden"
+            whileInView="show"
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-8"
+            variants={FADE_UP} 
+            className="flex justify-center"
           >
-            {/* Live Google Map */}
-            <div className="w-full aspect-square md:aspect-[4/3] rounded-sm overflow-hidden border border-gray-100 shadow-sm relative group">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.407986708688!2d38.83515457597576!3d9.02237078896001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85d999999999%3A0x123456789abcdef!2sSoreti%20Building!5e0!3m2!1sen!2set!4v1712475600000!5m2!1sen!2set" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                className="grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
-              ></iframe>
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-6 py-3 shadow-lg text-center pointer-events-none border border-gray-50">
-                <p className="font-serif text-lg text-brand-text">Addis Ababa</p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest">Soreti Building · Summit</p>
-              </div>
-            </div>
+            <Link 
+              href="/booking"
+              className="px-8 py-3.5 bg-brand-primary text-white text-sm font-medium rounded-full hover:bg-brand-primary/90 transition-colors shadow-lg shadow-brand-primary/20"
+              data-en="Book your appointment"
+              data-am="ቀጠሮ ይያዙ"
+            >
+              Book your appointment
+            </Link>
           </motion.div>
 
         </div>
+      </section>
+
+      {/* MAP SECTION */}
+      <section className="w-full h-[65vh] min-h-[500px] relative bg-brand-bg flex items-center justify-center">
+        {!showMap ? (
+          <div 
+            className="text-center cursor-pointer group flex flex-col items-center justify-center absolute inset-0 z-10 bg-brand-bg/50 backdrop-blur-sm"
+            onClick={() => setShowMap(true)}
+          >
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <MapPin className="w-8 h-8 text-brand-primary" />
+            </div>
+            <h3 
+              className="font-serif text-2xl text-brand-text mb-2"
+              data-en="View Clinic on Map"
+              data-am="ክሊኒኩን በካርታ ላይ ይመልከቱ"
+            >
+              View Clinic on Map
+            </h3>
+            <p 
+              className="text-brand-primary text-sm font-medium group-hover:underline"
+              data-en="Click to load interactive map"
+              data-am="በይነተገናኝ ካርታን ለመጫን ጠቅ ያድርጉ"
+            >
+              Click to load interactive map
+            </p>
+          </div>
+        ) : (
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.407986708688!2d38.8502567!3d9.0104432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b9b00741a2227%3A0x88afef00fef09c8b!2sHolistic%20speciality%20dental%20clinic%20Addis%20Ababa!5e0!3m2!1sen!2set!4v1712475600000!5m2!1sen!2set" 
+            width="100%" 
+            height="100%" 
+            style={{ border: 0 }} 
+            allowFullScreen={true} 
+            loading="lazy" 
+            referrerPolicy="no-referrer-when-downgrade"
+            className="absolute inset-0 w-full h-full grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+          />
+        )}
       </section>
     </main>
   );

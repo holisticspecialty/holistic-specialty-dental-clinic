@@ -157,7 +157,7 @@ export default function ServicesPage() {
               <ul className="space-y-4">
                 {category.items.map((item, itemIdx) => (
                   <li key={itemIdx} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-brand-accent shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-brand-primary shrink-0 mt-0.5" />
                     <div>
                       <p 
                         className="text-brand-text font-medium text-sm"
@@ -182,24 +182,18 @@ export default function ServicesPage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="bg-brand-accent p-12 md:p-20 rounded-sm text-center relative overflow-hidden"
+          className="bg-white p-12 md:p-20 rounded-sm text-center relative overflow-hidden border border-gray-100 shadow-sm"
         >
-          {/* Decorative background elements */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[150%] bg-white/10 blur-3xl rounded-full transform rotate-12" />
-            <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[150%] bg-white/5 blur-3xl rounded-full transform -rotate-12" />
-          </div>
-
           <div className="relative z-10 max-w-2xl mx-auto">
             <h2 
-              className="font-serif text-3xl md:text-5xl text-white mb-6"
+              className="font-serif text-3xl md:text-5xl text-brand-text mb-6"
               data-en="Ready to transform your smile?"
               data-am="ፈገግታዎትን ለመለወጥ ዝግጁ ነዎት?"
             >
               Ready to transform your smile?
             </h2>
             <p 
-              className="text-white/90 text-lg font-light mb-10"
+              className="text-gray-500 text-lg font-light mb-10"
               data-en="Schedule a consultation with our specialists to discuss your personalized treatment plan."
               data-am="የእርስዎን ግላዊ የሕክምና ዕቅድ ለመወያየት ከባለሙያዎቻችን ጋር ቀጠሮ ይያዙ።"
             >
@@ -207,7 +201,7 @@ export default function ServicesPage() {
             </p>
             <Link 
               href="/booking"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-brand-accent text-sm font-medium rounded-md hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center justify-center px-8 py-4 bg-brand-primary text-white text-sm font-medium rounded-full hover:bg-brand-primary/90 transition-colors shadow-lg shadow-brand-primary/20"
               data-en="Book Your Appointment"
               data-am="ቀጠሮ ይያዙ"
             >

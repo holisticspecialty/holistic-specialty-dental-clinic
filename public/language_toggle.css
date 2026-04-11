@@ -1,18 +1,65 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Ethiopic:wght@400;600;700;900&family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap');
 
-.lang-am, .lang-am * {
+/* ── Amharic body text: clean, readable sans-serif ───────────────── */
+.lang-am body,
+.lang-am p,
+.lang-am li,
+.lang-am span:not([data-no-translate]):not([data-no-translate] *),
+.lang-am a:not([data-no-translate]):not([data-no-translate] *),
+.lang-am button,
+.lang-am label,
+.lang-am input,
+.lang-am textarea,
+.lang-am select {
   font-family: 'Noto Sans Ethiopic', sans-serif !important;
-}
-
-.lang-am p, .lang-am li, .lang-am div {
   line-height: 1.8 !important;
 }
 
-.lang-am h1, .lang-am h2, .lang-am h3, .lang-am h4 {
+/* ── Amharic headings: Noto Serif Ethiopic mirrors Playfair's weight ─ */
+.lang-am h1:not([data-no-translate]):not([data-no-translate] *),
+.lang-am h2:not([data-no-translate]):not([data-no-translate] *),
+.lang-am h3:not([data-no-translate]):not([data-no-translate] *),
+.lang-am h4:not([data-no-translate]):not([data-no-translate] *),
+.lang-am h5:not([data-no-translate]):not([data-no-translate] *),
+.lang-am h6:not([data-no-translate]):not([data-no-translate] *) {
+  font-family: 'Noto Serif Ethiopic', serif !important;
+  font-weight: 700 !important;
   line-height: 1.4 !important;
   letter-spacing: normal !important;
 }
 
+/* ── Brand name protection Reset ───────────────────────────────────── */
+.lang-am [data-no-translate],
+.lang-am [data-no-translate] * {
+  font-family: var(--font-playfair), serif !important;
+  letter-spacing: normal !important;
+}
+
+/* ── Brand name in footer / nav — Noto Serif Ethiopic bold ─────────── */
+.lang-am [class*="font-playfair"]:not([data-no-translate]):not([data-no-translate] *),
+.lang-am [class*="font-serif"]:not([data-no-translate]):not([data-no-translate] *),
+.lang-am .font-serif:not([data-no-translate]):not([data-no-translate] *) {
+  font-family: 'Noto Serif Ethiopic', serif !important;
+  font-weight: 700 !important;
+}
+
+/* ── Italic-styled brand accent text ──────────────────────────────── */
+.lang-am .italic:not([data-no-translate]):not([data-no-translate] *),
+.lang-am [class*="italic"]:not([data-no-translate]):not([data-no-translate] *) {
+  font-family: 'Noto Serif Ethiopic', serif !important;
+  font-style: normal !important; /* Ethiopic has no true italic; bold weight instead */
+  font-weight: 600 !important;
+}
+
+/* ── Small caps / tracking labels (HOLISTIC DENTAL CARE badge etc.) ─ */
+.lang-am [class*="tracking-widest"],
+.lang-am [class*="uppercase"] {
+  font-family: 'Noto Sans Ethiopic', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* ── Language swap animation ──────────────────────────────────────── */
 @keyframes langSwapFlash {
   0%   { opacity: 1; }
   30%  { opacity: 0.5; }
