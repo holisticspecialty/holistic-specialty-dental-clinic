@@ -93,21 +93,32 @@ export default function BookingPage() {
     }
 
     try {
-      const { error: dbError } = await supabase.from('appointments').insert([{
-        full_name: form.full_name.trim(),
+      const payload = {
+        name: form.full_name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
         service: SERVICES.find(s => s.id === form.service)?.en || form.service,
-        preferred_date: form.preferred_date,
-        preferred_time: form.preferred_time,
-        message: form.message?.trim() || null,
+        date: form.preferred_date,
+        time: form.preferred_time,
+        notes: form.message?.trim() || null,
         status: 'pending',
-      }]);
-      if (dbError) throw dbError;
+      };
+      console.log('[Booking] Submitting payload:', payload);
+
+      const { error: dbError } = await supabase.from('appointments').insert([payload]);
+
+      if (dbError) {
+        console.error('[Booking] Supabase error details:', JSON.stringify(dbError, null, 2));
+        setError(dbError.message || dbError.details || 'Database error. Please try again.');
+        setLoading(false);
+        return;
+      }
+
       recordSubmission();
       setSubmitted(true);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } catch (err: any) {
+      console.error('[Booking] Caught exception:', err);
+      setError(err?.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }

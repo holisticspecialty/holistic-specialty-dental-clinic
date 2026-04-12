@@ -93,13 +93,13 @@ export default function BookPage() {
     const { error: sbError } = await supabase
       .from('appointments')
       .insert([{
-        full_name: form.full_name.trim(),
+        name: form.full_name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
         service: form.service,
-        preferred_date: form.preferred_date,
-        preferred_time: form.preferred_time,
-        message: form.message?.trim() || null,
+        date: form.preferred_date,
+        time: form.preferred_time,
+        notes: form.message?.trim() || null,
         status: 'pending',
       }]);
 
