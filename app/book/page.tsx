@@ -307,8 +307,7 @@ export default function BookPage() {
                 <h3 className="font-serif text-lg text-brand-text mb-4">Clinic Hours</h3>
                 <div className="space-y-2 text-sm text-gray-500">
                   {[
-                    ['Mon – Fri', '8:00 AM – 6:00 PM'],
-                    ['Saturday', '9:00 AM – 3:00 PM'],
+                    ['Mon – Sat', '8:00 AM – 6:00 PM'],
                     ['Sunday', 'Closed'],
                   ].map(([day, hrs]) => (
                     <div key={day} className="flex justify-between items-center py-1.5 border-b border-gray-100 last:border-0">

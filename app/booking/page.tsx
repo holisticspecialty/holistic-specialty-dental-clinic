@@ -13,18 +13,18 @@ import { validateBookingForm, checkRateLimit, recordSubmission } from '@/lib/val
 
 /* ─── Data ─────────────────────────────────────────────────────────── */
 const SERVICES = [
-  { id: 'cosmetic',     en: 'Cosmetic Dentistry',    icon: '✨' },
-  { id: 'implants',     en: 'Dental Implants',        icon: '🦷' },
-  { id: 'orthodontics', en: 'Orthodontics / Braces',  icon: '😁' },
-  { id: 'general',      en: 'General Care',           icon: '🏥' },
-  { id: 'whitening',    en: 'Teeth Whitening',        icon: '⚡' },
-  { id: 'rootcanal',    en: 'Root Canal',             icon: '🔬' },
-  { id: 'cleaning',     en: 'Dental Cleaning',        icon: '🌿' },
-  { id: 'emergency',    en: 'Emergency Care',         icon: '🚨' },
-  { id: 'ozone',        en: 'Ozone Therapy',          icon: '💠' },
-  { id: 'amalgam',      en: 'Mercury-Safe Removal',   icon: '🛡️' },
-  { id: 'pediatric',    en: 'Pediatric Dentistry',    icon: '👶' },
-  { id: 'consultation', en: 'Consultation',           icon: '💬' },
+  { id: 'cosmetic',     en: 'Cosmetic Dentistry' },
+  { id: 'implants',     en: 'Dental Implants' },
+  { id: 'orthodontics', en: 'Orthodontics / Braces' },
+  { id: 'general',      en: 'General Care' },
+  { id: 'whitening',    en: 'Teeth Whitening' },
+  { id: 'rootcanal',    en: 'Root Canal' },
+  { id: 'cleaning',     en: 'Dental Cleaning' },
+  { id: 'emergency',    en: 'Emergency Care' },
+  { id: 'ozone',        en: 'Ozone Therapy' },
+  { id: 'amalgam',      en: 'Mercury-Safe Removal' },
+  { id: 'pediatric',    en: 'Pediatric Dentistry' },
+  { id: 'consultation', en: 'Consultation' },
 ];
 
 const TIME_SLOTS = [
@@ -354,7 +354,6 @@ export default function BookingPage() {
                             : 'border-gray-100 bg-brand-bg text-brand-text hover:border-brand-primary/40 hover:bg-brand-primary/5'
                         }`}
                       >
-                        <span className="text-base mb-1 block">{s.icon}</span>
                         <span className="text-xs font-semibold">{s.en}</span>
                         {form.service === s.id && (
                           <motion.div
@@ -551,8 +550,7 @@ export default function BookingPage() {
                     <h3 className="text-xs font-bold tracking-widest uppercase text-gray-400 mb-4">Clinic Hours</h3>
                     <div className="space-y-2">
                       {[
-                        ['Mon – Fri', '8:00 AM – 6:00 PM'],
-                        ['Saturday', '9:00 AM – 3:00 PM'],
+                        ['Mon – Sat', '8:00 AM – 6:00 PM'],
                         ['Sunday', 'Closed'],
                       ].map(([day, hrs]) => (
                         <div key={day} className="flex justify-between items-center text-sm py-1.5 border-b border-gray-50 last:border-0">
@@ -563,12 +561,7 @@ export default function BookingPage() {
                     </div>
                   </div>
 
-                  {/* Emergency */}
-                  <div className="bg-brand-primary rounded-2xl p-6 text-white">
-                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-60 mb-2">Emergency Line</p>
-                    <p className="text-xl font-serif font-bold mb-1">+251 11 XXX XXXX</p>
-                    <p className="text-xs opacity-50">Available for urgent dental care</p>
-                  </div>
+
                 </div>
               </motion.div>
             </div>
