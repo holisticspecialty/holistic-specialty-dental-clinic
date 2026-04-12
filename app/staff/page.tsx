@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+
 import { motion } from 'motion/react';
 import { Lock, Mail, Eye, EyeOff, Leaf } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
@@ -9,7 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function StaffLoginPage() {
-  const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
@@ -21,15 +21,18 @@ export default function StaffLoginPage() {
     setLoading(true);
     setError('');
 
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (authError) {
+    if (authError || !data.session) {
       setError('Invalid credentials. Please check your email and password.');
       setLoading(false);
       return;
     }
 
-    router.push('/staff/portal');
+    // Use a hard redirect so the browser sends the newly-written auth cookie
+    // to the server. client-side router.push() can hit middleware before the
+    // cookie is committed, causing an infinite redirect loop.
+    window.location.href = '/staff/portal';
   };
 
   return (
