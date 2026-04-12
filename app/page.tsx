@@ -31,7 +31,7 @@ export default function Home() {
       <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 min-h-screen flex items-center w-full overflow-hidden">
         {/* Faded Background Image */}
         <div className="absolute top-[72px] right-0 bottom-0 w-full lg:w-[60%] z-0 pointer-events-none">
-          <div className="absolute inset-0 bg-[url('/Hero.png')] bg-cover bg-center opacity-30 [mask-image:linear-gradient(to_right,transparent_0%,black_100%)] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_60%)]" />
+          <div className="absolute inset-0 bg-[url('/Hero.jpg')] bg-cover bg-center opacity-30 [mask-image:linear-gradient(to_right,transparent_0%,black_100%)] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_60%)]" />
         </div>
 
         <div className="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-10">
@@ -126,7 +126,7 @@ export default function Home() {
             className="relative"
           >
             <div className="aspect-[4/5] bg-gray-100 rounded-sm overflow-hidden relative">
-              <div className="absolute inset-0 bg-[url('/About.png')] bg-cover bg-center" />
+              <div className="absolute inset-0 bg-[url('/About.jpg')] bg-cover bg-center" />
             </div>
             {/* Quote Card */}
             <div className="absolute -bottom-8 -right-4 md:-right-12 bg-white p-6 md:p-8 shadow-xl shadow-black/5 max-w-xs border border-gray-50">
