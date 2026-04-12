@@ -246,7 +246,7 @@ export default function BookingPage() {
             href="/"
             className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-gray-400 hover:text-brand-text transition-colors"
           >
-            <X className="w-3.5 h-3.5" /> Close
+            <X className="w-3.5 h-3.5" /> <span data-en="Close" data-am="ዝጋ">Close</span>
           </Link>
         </div>
       </header>
@@ -261,14 +261,27 @@ export default function BookingPage() {
             transition={{ duration: 0.6 }}
             className="pt-14 pb-10 text-center"
           >
-            <span className="inline-flex items-center gap-2 text-brand-primary text-xs font-bold tracking-widest uppercase mb-5">
+            <span 
+              className="inline-flex items-center gap-2 text-brand-primary text-xs font-bold tracking-widest uppercase mb-5"
+              data-en="Book Your Visit"
+              data-am="ቀጠሮ ይያዙ"
+            >
               <Leaf className="w-3.5 h-3.5" /> Book Your Visit
             </span>
-            <h1 className="font-serif text-5xl md:text-6xl text-brand-text leading-tight mb-4">
+            <h1 
+              className="font-serif text-5xl md:text-6xl text-brand-text leading-tight mb-4"
+              data-allow-html="true"
+              data-en='Schedule an <span class="italic text-brand-primary">Appointment</span>'
+              data-am='ቀጠሮ <span class="italic text-brand-primary">ይያዙ</span>'
+            >
               Schedule an{' '}
               <span className="italic text-brand-primary">Appointment</span>
             </h1>
-            <p className="text-gray-400 text-sm max-w-md mx-auto">
+            <p 
+              className="text-gray-400 text-sm max-w-md mx-auto"
+              data-en="Fill in the form below and we'll confirm your appointment within 24 hours. For urgent needs, call us directly."
+              data-am="ከታች ያለውን ቅጽ ይሙሉ እና በ24 ሰዓት ውስጥ ቀጠሮዎን እናረጋግጣለን። በአስቸኳይ ሁኔታዎች በቀጥታ ይደውሉልን።"
+            >
               Fill in the form below and we&apos;ll confirm your appointment within
               24 hours. For urgent needs, call us directly.
             </p>
@@ -289,12 +302,20 @@ export default function BookingPage() {
 
                 {/* Section: Personal Info */}
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2">
+                  <h2 
+                    className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2"
+                    data-en="Personal Information"
+                    data-am="የግል መረጃ"
+                  >
                     <User className="w-3.5 h-3.5" /> Personal Information
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div className="sm:col-span-2">
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+                      <label 
+                        className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2"
+                        data-en="Full Name"
+                        data-am="ሙሉ ስም"
+                      >
                         Full Name <span className="text-brand-accent">*</span>
                       </label>
                       <input
@@ -303,11 +324,17 @@ export default function BookingPage() {
                         value={form.full_name}
                         onChange={e => update('full_name', e.target.value)}
                         placeholder="e.g. Selam Bekele"
+                        data-placeholder-en="e.g. Selam Bekele"
+                        data-placeholder-am="ለምሳሌ ሰላም በቀለ"
                         className="w-full px-4 py-3.5 rounded-xl border-2 border-gray-100 bg-brand-bg text-brand-text text-sm placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+                      <label 
+                        className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2"
+                        data-en="Email"
+                        data-am="ኢሜይል"
+                      >
                         Email <span className="text-brand-accent">*</span>
                       </label>
                       <div className="relative">
@@ -318,12 +345,18 @@ export default function BookingPage() {
                           value={form.email}
                           onChange={e => update('email', e.target.value)}
                           placeholder="selam@example.com"
+                          data-placeholder-en="selam@example.com"
+                          data-placeholder-am="selam@example.com"
                           className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-100 bg-brand-bg text-brand-text text-sm placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+                      <label 
+                        className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2"
+                        data-en="Phone"
+                        data-am="ስልክ"
+                      >
                         Phone <span className="text-brand-accent">*</span>
                       </label>
                       <div className="relative">
@@ -334,6 +367,8 @@ export default function BookingPage() {
                           value={form.phone}
                           onChange={e => update('phone', e.target.value)}
                           placeholder="+251 9XX XXX XXX"
+                          data-placeholder-en="+251 9XX XXX XXX"
+                          data-placeholder-am="+251 9XX XXX XXX"
                           className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-100 bg-brand-bg text-brand-text text-sm placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
                         />
                       </div>
@@ -343,7 +378,11 @@ export default function BookingPage() {
 
                 {/* Section: Service Selection */}
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2">
+                  <h2 
+                    className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2"
+                    data-en="Choose a Service"
+                    data-am="አገልግሎት ይምረጡ"
+                  >
                     <Sparkles className="w-3.5 h-3.5" /> Choose a Service <span className="text-brand-accent">*</span>
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -358,7 +397,13 @@ export default function BookingPage() {
                             : 'border-gray-100 bg-brand-bg text-brand-text hover:border-brand-primary/40 hover:bg-brand-primary/5'
                         }`}
                       >
-                        <span className="text-xs font-semibold">{s.en}</span>
+                        <span 
+                          className="text-xs font-semibold"
+                          data-en={s.en}
+                          data-am={s.am}
+                        >
+                          {s.en}
+                        </span>
                         {form.service === s.id && (
                           <motion.div
                             layoutId="service-check"
@@ -374,13 +419,21 @@ export default function BookingPage() {
 
                 {/* Section: Date & Time */}
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2">
+                  <h2 
+                    className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2"
+                    data-en="Date & Time"
+                    data-am="ቀን እና ሰዓት"
+                  >
                     <Calendar className="w-3.5 h-3.5" /> Date &amp; Time <span className="text-brand-accent">*</span>
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Date picker */}
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-3">
+                      <label 
+                        className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-3"
+                        data-en="Preferred Date"
+                        data-am="የተመረጠ ቀን"
+                      >
                         Preferred Date
                       </label>
                       <input
@@ -390,11 +443,19 @@ export default function BookingPage() {
                         onChange={e => update('preferred_date', e.target.value)}
                         className="w-full border-2 border-gray-100 bg-brand-bg rounded-xl px-4 py-3.5 text-sm text-brand-text focus:outline-none focus:border-brand-primary transition-colors"
                       />
-                      <p className="text-[10px] text-gray-300 mt-2 ml-1">Mon – Sat · Sunday closed</p>
+                      <p 
+                        className="text-[10px] text-gray-300 mt-2 ml-1"
+                        data-en="Mon – Sat · Sunday closed"
+                        data-am="ሰኞ – ቅዳሜ · እሁድ ዝግ ነው"
+                      >Mon – Sat · Sunday closed</p>
                     </div>
                     {/* Time slots */}
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-1.5">
+                      <label 
+                        className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-1.5"
+                        data-en="Preferred Time"
+                        data-am="የተመረጠ ሰዓት"
+                      >
                         <Clock className="w-3 h-3" /> Preferred Time
                       </label>
                       <div className="grid grid-cols-3 gap-2">
@@ -419,7 +480,11 @@ export default function BookingPage() {
 
                 {/* Section: Additional Notes */}
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
-                  <h2 className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2">
+                  <h2 
+                    className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2"
+                    data-en="Additional Notes"
+                    data-am="ተጨማሪ ማሳሰቢያ"
+                  >
                     <MessageSquare className="w-3.5 h-3.5" /> Additional Notes{' '}
                     <span className="text-gray-300 font-normal normal-case tracking-normal">(optional)</span>
                   </h2>
@@ -428,6 +493,8 @@ export default function BookingPage() {
                     value={form.message}
                     onChange={e => update('message', e.target.value)}
                     placeholder="Any allergies, concerns, or special requests you'd like us to know..."
+                    data-placeholder-en="Any allergies, concerns, or special requests you'd like us to know..."
+                    data-placeholder-am="ማንኛውም አይነት አለርጂ፣ ስጋት ወይም ልዩ ጥያቄ ካለዎት ይጥቀሱ..."
                     className="w-full px-4 py-3.5 rounded-xl border-2 border-gray-100 bg-brand-bg text-brand-text text-sm placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors resize-none"
                   />
                 </div>
@@ -457,7 +524,11 @@ export default function BookingPage() {
                 {/* Booking summary card */}
                 <div className="sticky top-[84px]">
                   <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-5">
-                    <h3 className="text-xs font-bold tracking-widest uppercase text-gray-400 mb-5">
+                    <h3 
+                      className="text-xs font-bold tracking-widest uppercase text-gray-400 mb-5"
+                      data-en="Booking Summary"
+                      data-am="የቀጠሮ ማጠቃለያ"
+                    >
                       Booking Summary
                     </h3>
 
@@ -468,9 +539,17 @@ export default function BookingPage() {
                           <Sparkles className="w-4 h-4 text-brand-primary" />
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">Service</p>
+                          <p 
+                            className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5"
+                            data-en="Service"
+                            data-am="አገልግሎት"
+                          >Service</p>
                           <p className="text-sm font-semibold text-brand-text">
-                            {selectedService ? selectedService.en : <span className="text-gray-300 font-normal">Not selected</span>}
+                            {selectedService ? (
+                              <span data-en={selectedService.en} data-am={selectedService.am}>{selectedService.en}</span>
+                            ) : (
+                              <span className="text-gray-300 font-normal" data-en="Not selected" data-am="አልተመረጠም">Not selected</span>
+                            )}
                           </p>
                         </div>
                       </div>
@@ -481,9 +560,13 @@ export default function BookingPage() {
                           <Calendar className="w-4 h-4 text-brand-accent" />
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">Date</p>
+                          <p 
+                            className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5"
+                            data-en="Date"
+                            data-am="ቀን"
+                          >Date</p>
                           <p className="text-sm font-semibold text-brand-text">
-                            {form.preferred_date || <span className="text-gray-300 font-normal">Not selected</span>}
+                            {form.preferred_date || <span className="text-gray-300 font-normal" data-en="Not selected" data-am="አልተመረጠም">Not selected</span>}
                           </p>
                         </div>
                       </div>
@@ -494,9 +577,13 @@ export default function BookingPage() {
                           <Clock className="w-4 h-4 text-brand-accent" />
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">Time</p>
+                          <p 
+                            className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5"
+                            data-en="Time"
+                            data-am="ሰዓት"
+                          >Time</p>
                           <p className="text-sm font-semibold text-brand-text">
-                            {form.preferred_time || <span className="text-gray-300 font-normal">Not selected</span>}
+                            {form.preferred_time || <span className="text-gray-300 font-normal" data-en="Not selected" data-am="አልተመረጠም">Not selected</span>}
                           </p>
                         </div>
                       </div>
@@ -512,7 +599,11 @@ export default function BookingPage() {
                             <User className="w-4 h-4 text-gray-500" />
                           </div>
                           <div>
-                            <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">Patient</p>
+                            <p 
+                              className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5"
+                              data-en="Patient"
+                              data-am="ታካሚ"
+                            >Patient</p>
                             <p className="text-sm font-semibold text-brand-text">{form.full_name}</p>
                           </div>
                         </motion.div>
@@ -534,32 +625,40 @@ export default function BookingPage() {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                           </svg>
-                          Submitting...
+                          <span data-en="Submitting..." data-am="በመላክ ላይ...">Submitting...</span>
                         </>
                       ) : (
                         <>
                           <CheckCircle className="w-4 h-4" />
-                          Confirm Booking
+                          <span data-en="Confirm Booking" data-am="ቀጠሮውን አረጋግጥ">Confirm Booking</span>
                         </>
                       )}
                     </button>
 
-                    <p className="text-[10px] text-gray-300 text-center mt-4 leading-relaxed">
+                    <p 
+                      className="text-[10px] text-gray-300 text-center mt-4 leading-relaxed"
+                      data-en="Our team will contact you within 24 hours to confirm your appointment."
+                      data-am="የእኛ ባለሙያዎች በ24 ሰዓት ውስጥ ቀጠሮዎን ለማረጋገጥ ያነጋግሩዎታል።"
+                    >
                       Our team will contact you within 24 hours to confirm your appointment.
                     </p>
                   </div>
 
                   {/* Clinic hours */}
                   <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-5">
-                    <h3 className="text-xs font-bold tracking-widest uppercase text-gray-400 mb-4">Clinic Hours</h3>
+                    <h3 
+                      className="text-xs font-bold tracking-widest uppercase text-gray-400 mb-4"
+                      data-en="Clinic Hours"
+                      data-am="የክሊኒኩ ሰዓታት"
+                    >Clinic Hours</h3>
                     <div className="space-y-2">
                       {[
-                        ['Mon – Sat', '8:00 AM – 6:00 PM'],
-                        ['Sunday', 'Closed'],
-                      ].map(([day, hrs]) => (
+                        ['Mon – Sat', '8:00 AM – 6:00 PM', 'ሰኞ – ቅዳሜ', 'ከጠዋቱ 2:00 – ከሰዓት 12:00'],
+                        ['Sunday', 'Closed', 'እሁድ', 'ዝግ ነው'],
+                      ].map(([day, hrs, dayAm, hrsAm]) => (
                         <div key={day} className="flex justify-between items-center text-sm py-1.5 border-b border-gray-50 last:border-0">
-                          <span className="font-medium text-brand-text text-xs">{day}</span>
-                          <span className={`text-xs ${hrs === 'Closed' ? 'text-red-400' : 'text-gray-400'}`}>{hrs}</span>
+                          <span className="font-medium text-brand-text text-xs" data-en={day} data-am={dayAm}>{day}</span>
+                          <span className={`text-xs ${hrs === 'Closed' ? 'text-red-400' : 'text-gray-400'}`} data-en={hrs} data-am={hrsAm}>{hrs}</span>
                         </div>
                       ))}
                     </div>
