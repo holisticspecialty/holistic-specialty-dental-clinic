@@ -1,26 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ChevronRight, CheckCircle, Calendar, Clock, User, Phone, Mail, MessageSquare } from 'lucide-react';
+import {
+  X, CheckCircle, Calendar, Clock, User, Phone, Mail,
+  MessageSquare, Leaf, ArrowRight, Sparkles,
+} from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { validateBookingForm, checkRateLimit, recordSubmission } from '@/lib/validation';
 
+/* ─── Data ─────────────────────────────────────────────────────────── */
 const SERVICES = [
-  { id: 'cosmetic',      en: 'Cosmetic Dentistry',      am: 'የውበት ጥርስ ሕክምና' },
-  { id: 'implants',      en: 'Dental Implants',          am: 'የጥርስ ተክሎች' },
-  { id: 'orthodontics',  en: 'Orthodontics / Braces',    am: 'ኦርቶዶንቲክስ / ብሬስ' },
-  { id: 'general',       en: 'General Care',             am: 'አጠቃላይ ሕክምና' },
-  { id: 'whitening',     en: 'Teeth Whitening',          am: 'የጥርስ ማፅዳት' },
-  { id: 'rootcanal',     en: 'Root Canal',               am: 'ሥር ቦይ ሕክምና' },
-  { id: 'cleaning',      en: 'Dental Cleaning',          am: 'የጥርስ ንጽህና' },
-  { id: 'emergency',     en: 'Emergency Care',           am: 'አስቸኳይ ሕክምና' },
-  { id: 'ozone',         en: 'Ozone Therapy',            am: 'ኦዞን ሕክምና' },
-  { id: 'amalgam',       en: 'Mercury-Safe Removal',     am: 'ሜርኩሪ-ምን ማስወገጃ' },
-  { id: 'pediatric',     en: 'Pediatric Dentistry',      am: 'የሕፃናት ጥርስ ሕክምና' },
-  { id: 'consultation',  en: 'Consultation',             am: 'ምክክር' },
+  { id: 'cosmetic',     en: 'Cosmetic Dentistry',    icon: '✨' },
+  { id: 'implants',     en: 'Dental Implants',        icon: '🦷' },
+  { id: 'orthodontics', en: 'Orthodontics / Braces',  icon: '😁' },
+  { id: 'general',      en: 'General Care',           icon: '🏥' },
+  { id: 'whitening',    en: 'Teeth Whitening',        icon: '⚡' },
+  { id: 'rootcanal',    en: 'Root Canal',             icon: '🔬' },
+  { id: 'cleaning',     en: 'Dental Cleaning',        icon: '🌿' },
+  { id: 'emergency',    en: 'Emergency Care',         icon: '🚨' },
+  { id: 'ozone',        en: 'Ozone Therapy',          icon: '💠' },
+  { id: 'amalgam',      en: 'Mercury-Safe Removal',   icon: '🛡️' },
+  { id: 'pediatric',    en: 'Pediatric Dentistry',    icon: '👶' },
+  { id: 'consultation', en: 'Consultation',           icon: '💬' },
 ];
 
 const TIME_SLOTS = [
@@ -41,41 +45,38 @@ type FormData = {
   message: string;
 };
 
+/* ─── Page ──────────────────────────────────────────────────────────── */
 export default function BookingPage() {
-  const [step, setStep] = useState(1);
-  const [dir, setDir] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const formRef = useRef<HTMLDivElement>(null);
+
   const [form, setForm] = useState<FormData>({
     full_name: '', email: '', phone: '',
     service: '', preferred_date: '', preferred_time: '', message: '',
   });
 
   const today = new Date().toISOString().split('T')[0];
-  const update = (field: keyof FormData, value: string) =>
+  const update = (field: keyof FormData, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }));
-
-  const goTo = (next: number) => {
-    setDir(next > step ? 1 : -1);
-    setStep(next);
+    setError('');
   };
 
-  const progress = (step / 3) * 100;
+  const selectedService = SERVICES.find(s => s.id === form.service);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
     setError('');
 
-    // Rate limit check
     const rateCheck = checkRateLimit();
     if (!rateCheck.allowed) {
-      setError(`Please wait ${rateCheck.waitSeconds} seconds before submitting again.`);
+      setError(`Please wait ${rateCheck.waitSeconds}s before submitting again.`);
       setLoading(false);
       return;
     }
 
-    // Validate all fields
     const validationErrors = validateBookingForm({
       full_name: form.full_name,
       email: form.email,
@@ -93,23 +94,19 @@ export default function BookingPage() {
     }
 
     try {
-      const payload = {
+      const { error: dbError } = await supabase.from('appointments').insert([{
         name: form.full_name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
-        service: SERVICES.find(s => s.id === form.service)?.en || form.service,
+        service: selectedService?.en || form.service,
         date: form.preferred_date,
         time: form.preferred_time,
         notes: form.message?.trim() || null,
         status: 'pending',
-      };
-      console.log('[Booking] Submitting payload:', payload);
-
-      const { error: dbError } = await supabase.from('appointments').insert([payload]);
+      }]);
 
       if (dbError) {
-        console.error('[Booking] Supabase error details:', JSON.stringify(dbError, null, 2));
-        setError(dbError.message || dbError.details || 'Database error. Please try again.');
+        setError(dbError.message || 'Database error. Please try again.');
         setLoading(false);
         return;
       }
@@ -117,25 +114,17 @@ export default function BookingPage() {
       recordSubmission();
       setSubmitted(true);
     } catch (err: any) {
-      console.error('[Booking] Caught exception:', err);
       setError(err?.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const slideVariants = {
-    enter: (d: number) => ({ opacity: 0, x: d > 0 ? 50 : -50 }),
-    center: { opacity: 1, x: 0, transition: { duration: 0.35, ease: 'easeOut' as const } },
-    exit: (d: number) => ({ opacity: 0, x: d > 0 ? -50 : 50, transition: { duration: 0.25 } }),
-  };
-
-  const selectedService = SERVICES.find(s => s.id === form.service);
-
+  /* ── Success Screen ──────────────────────────────────────────────── */
   if (submitted) {
     return (
       <div className="min-h-screen bg-brand-bg flex flex-col">
-        <div className="h-[3px] bg-brand-primary w-full" />
+        <div className="h-1 bg-brand-primary w-full" />
         <header className="flex items-center justify-between px-8 py-5 border-b border-gray-200/60 bg-brand-bg">
           <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.svg" alt="Logo" width={36} height={36} />
@@ -145,99 +134,103 @@ export default function BookingPage() {
             </span>
           </Link>
         </header>
-        <div className="flex-1 flex items-center justify-center px-6">
+
+        <div className="flex-1 flex items-center justify-center px-6 py-20">
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="text-center max-w-lg"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="max-w-lg w-full text-center"
           >
-            <div className="w-20 h-20 rounded-full bg-brand-primary/10 flex items-center justify-center mx-auto mb-8">
-              <CheckCircle className="w-10 h-10 text-brand-primary" />
-            </div>
-            <p
+            {/* Animated check */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', delay: 0.2, stiffness: 200, damping: 18 }}
+              className="w-24 h-24 rounded-full bg-brand-primary/10 flex items-center justify-center mx-auto mb-8 ring-8 ring-brand-primary/5"
+            >
+              <CheckCircle className="w-12 h-12 text-brand-primary" strokeWidth={1.5} />
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
               className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-3"
-              data-en="Booking Received"
-              data-am="ቀጠሮ ተቀብሏል"
             >
               Booking Received
-            </p>
-            <h1 className="font-serif text-5xl text-brand-text mb-6 leading-tight">
-              <span
-                data-en={`You're all set,`}
-                data-am={`ሁሉም ዝግጁ ነው,`}
-              >
-                You&apos;re all set,
-              </span>
-              <br />
+            </motion.p>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45 }}
+              className="font-serif text-5xl text-brand-text mb-5 leading-tight"
+            >
+              You&apos;re all set,<br />
               <span className="italic text-brand-primary">{form.full_name.split(' ')[0]}.</span>
-            </h1>
-            <p className="text-gray-400 text-sm leading-relaxed mb-8">
-              <span
-                data-en={`Your request for`}
-                data-am={`የቀጠሮ ጥያቄዎ ለ`}
-              >
-                Your request for
-              </span>{' '}
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.55 }}
+              className="text-gray-400 text-sm leading-relaxed mb-10"
+            >
+              Your appointment request for{' '}
               <strong className="text-brand-text">{selectedService?.en}</strong>{' '}
-              <span data-en="on" data-am="በቀን">on</span>{' '}
-              <strong className="text-brand-text">{form.preferred_date}</strong>{' '}
-              <span data-en="at" data-am="ሰዓት">at</span>{' '}
-              <strong className="text-brand-text">{form.preferred_time}</strong>{' '}
-              <span
-                data-en="has been received. We'll confirm within 24 hours."
-                data-am="ደርሷል። በ24 ሰዓት ውስጥ እናረጋግጣለን።"
-              >
-                has been received. We&apos;ll confirm within 24 hours.
-              </span>
-            </p>
-            <div className="bg-white border border-gray-100 rounded-2xl p-6 text-left mb-8 space-y-3">
+              on <strong className="text-brand-text">{form.preferred_date}</strong>{' '}
+              at <strong className="text-brand-text">{form.preferred_time}</strong>{' '}
+              has been received. We&apos;ll confirm within 24 hours.
+            </motion.p>
+
+            {/* Summary card */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65 }}
+              className="bg-white border border-gray-100 rounded-2xl p-6 text-left mb-8 shadow-sm divide-y divide-gray-50"
+            >
               {[
-                ['Service', 'አገልግሎት', selectedService?.en],
-                ['Date', 'ቀን', form.preferred_date],
-                ['Time', 'ሰዓት', form.preferred_time],
-                ['Contact', 'አድራሻ', form.email],
-              ].map(([label, labelAm, val]) => (
-                <div key={label} className="flex justify-between items-center text-sm border-b border-gray-50 last:border-0 pb-2 last:pb-0">
-                  <span
-                    className="text-gray-400 text-xs uppercase tracking-wider font-medium"
-                    data-en={label}
-                    data-am={labelAm}
-                  >
-                    {label}
-                  </span>
-                  <span className="text-brand-text font-medium">{val}</span>
+                { label: 'Service', value: selectedService?.en },
+                { label: 'Date', value: form.preferred_date },
+                { label: 'Time', value: form.preferred_time },
+                { label: 'Contact', value: form.email },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex justify-between items-center py-3 first:pt-0 last:pb-0">
+                  <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">{label}</span>
+                  <span className="text-brand-text font-medium text-sm">{value}</span>
                 </div>
               ))}
-            </div>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-sm text-brand-primary font-medium hover:opacity-70 transition-opacity"
-              data-en="← Back to website"
-              data-am="← ወደ ድረ-ገጽ ተመለስ"
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.75 }}
             >
-              ← Back to website
-            </Link>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-brand-primary text-white text-sm font-semibold rounded-full hover:bg-brand-primary/90 transition-colors shadow-lg shadow-brand-primary/20"
+              >
+                Back to Home <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </div>
     );
   }
 
+  /* ── Main Form ───────────────────────────────────────────────────── */
   return (
     <div className="min-h-screen bg-brand-bg flex flex-col">
-      {/* Progress bar */}
-      <div className="h-[3px] bg-gray-100 w-full fixed top-0 z-50">
-        <motion.div
-          className="h-full bg-brand-primary"
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-        />
-      </div>
+      {/* Top accent line */}
+      <div className="h-1 bg-gradient-to-r from-brand-primary via-brand-accent to-brand-primary w-full" />
 
       {/* Header */}
-      <header className="fixed top-[3px] left-0 right-0 z-40 bg-brand-bg/95 backdrop-blur-sm border-b border-gray-200/60">
-        <div className="max-w-6xl mx-auto px-8 h-[68px] flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-brand-bg/95 backdrop-blur-sm border-b border-gray-200/60">
+        <div className="max-w-7xl mx-auto px-6 md:px-10 h-[68px] flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.svg" alt="Holistic Specialty Logo" width={36} height={36} />
             <span className="font-[family-name:var(--font-playfair)] text-brand-primary tracking-tight text-[1.05rem]">
@@ -248,305 +241,338 @@ export default function BookingPage() {
           <Link
             href="/"
             className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-gray-400 hover:text-brand-text transition-colors"
-            data-en="Close"
-            data-am="ዝጋ"
           >
             <X className="w-3.5 h-3.5" /> Close
           </Link>
         </div>
       </header>
 
-      {/* Content */}
-      <main className="flex-1 pt-[71px] overflow-hidden">
-        <div className="max-w-6xl mx-auto px-8 pt-14 pb-20">
-          <AnimatePresence mode="wait" custom={dir}>
+      <main className="flex-1">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
 
-            {/* STEP 1 */}
-            {step === 1 && (
-              <motion.div key="step1" custom={dir} variants={slideVariants} initial="enter" animate="center" exit="exit">
-                <p
-                  className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-5"
-                  data-en="Step 1 of 3"
-                  data-am="ደረጃ 1 ከ 3"
-                >
-                  Step 1 of 3
-                </p>
-                <h1
-                  className="font-serif text-5xl md:text-[4rem] text-brand-text mb-14 leading-tight"
-                  data-en="Choose a Service."
-                  data-am="አገልግሎት ይምረጡ።"
-                >
-                  Choose a Service.
-                </h1>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-14">
-                  {SERVICES.map(s => (
-                    <button
-                      key={s.id}
-                      onClick={() => update('service', s.id)}
-                      data-en={s.en}
-                      data-am={s.am}
-                      className={`text-left px-5 py-5 border-2 rounded-xl transition-all duration-200 text-sm font-medium leading-tight ${
-                        form.service === s.id
-                          ? 'border-brand-primary bg-brand-primary text-white shadow-lg shadow-brand-primary/25'
-                          : 'border-gray-200 bg-white text-brand-text hover:border-brand-primary/50'
-                      }`}
-                    >
-                      {s.en}
-                    </button>
-                  ))}
+          {/* Hero section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="pt-14 pb-10 text-center"
+          >
+            <span className="inline-flex items-center gap-2 text-brand-primary text-xs font-bold tracking-widest uppercase mb-5">
+              <Leaf className="w-3.5 h-3.5" /> Book Your Visit
+            </span>
+            <h1 className="font-serif text-5xl md:text-6xl text-brand-text leading-tight mb-4">
+              Schedule an{' '}
+              <span className="italic text-brand-primary">Appointment</span>
+            </h1>
+            <p className="text-gray-400 text-sm max-w-md mx-auto">
+              Fill in the form below and we&apos;ll confirm your appointment within
+              24 hours. For urgent needs, call us directly.
+            </p>
+          </motion.div>
+
+          {/* Two-column layout */}
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 pb-24">
+
+              {/* ── LEFT: Form fields ──────────────────────────────── */}
+              <motion.div
+                ref={formRef}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15, duration: 0.6 }}
+                className="lg:col-span-3 space-y-8"
+              >
+
+                {/* Section: Personal Info */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2">
+                    <User className="w-3.5 h-3.5" /> Personal Information
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="sm:col-span-2">
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+                        Full Name <span className="text-brand-accent">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={form.full_name}
+                        onChange={e => update('full_name', e.target.value)}
+                        placeholder="e.g. Selam Bekele"
+                        className="w-full px-4 py-3.5 rounded-xl border-2 border-gray-100 bg-brand-bg text-brand-text text-sm placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+                        Email <span className="text-brand-accent">*</span>
+                      </label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                        <input
+                          type="email"
+                          required
+                          value={form.email}
+                          onChange={e => update('email', e.target.value)}
+                          placeholder="selam@example.com"
+                          className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-100 bg-brand-bg text-brand-text text-sm placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+                        Phone <span className="text-brand-accent">*</span>
+                      </label>
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                        <input
+                          type="tel"
+                          required
+                          value={form.phone}
+                          onChange={e => update('phone', e.target.value)}
+                          placeholder="+251 9XX XXX XXX"
+                          className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-100 bg-brand-bg text-brand-text text-sm placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <button
-                  onClick={() => goTo(2)}
-                  disabled={!form.service}
-                  data-en="Continue"
-                  data-am="ቀጥል"
-                  className={`inline-flex items-center gap-3 px-8 py-4 text-xs font-bold tracking-widest uppercase rounded-full transition-all ${
-                    form.service
-                      ? 'bg-brand-accent text-white hover:bg-brand-accent/90 shadow-lg shadow-brand-accent/25'
-                      : 'bg-gray-100 text-gray-300 cursor-not-allowed'
-                  }`}
-                >
-                  Continue <ChevronRight className="w-4 h-4" />
-                </button>
-              </motion.div>
-            )}
 
-            {/* STEP 2 */}
-            {step === 2 && (
-              <motion.div key="step2" custom={dir} variants={slideVariants} initial="enter" animate="center" exit="exit">
-                <p
-                  className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-5"
-                  data-en="Step 2 of 3"
-                  data-am="ደረጃ 2 ከ 3"
-                >
-                  Step 2 of 3
-                </p>
-                <h1
-                  className="font-serif text-5xl md:text-[4rem] text-brand-text mb-14 leading-tight"
-                  data-en="Pick Your Time."
-                  data-am="ሰዓትዎን ይምረጡ።"
-                >
-                  Pick Your Time.
-                </h1>
-                <div className="grid md:grid-cols-2 gap-12 mb-14">
-                  <div>
-                    <label className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-gray-400 mb-5">
-                      <Calendar className="w-3.5 h-3.5 text-brand-accent" />
-                      <span data-en="Select Date" data-am="ቀን ይምረጡ">Select Date</span>
-                    </label>
-                    <input
-                      type="date"
-                      min={today}
-                      value={form.preferred_date}
-                      onChange={e => update('preferred_date', e.target.value)}
-                      className="w-full border-2 border-gray-200 bg-white rounded-xl px-5 py-4 text-sm text-brand-text focus:outline-none focus:border-brand-primary transition-colors"
-                    />
-                    <p
-                      className="text-xs text-gray-300 mt-2 ml-1"
-                      data-en="Mon – Sat · Sunday closed"
-                      data-am="ሰኞ – ቅዳሜ · እሁድ ዝግ"
+                {/* Section: Service Selection */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5" /> Choose a Service <span className="text-brand-accent">*</span>
+                  </h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                    {SERVICES.map(s => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => update('service', s.id)}
+                        className={`relative text-left px-4 py-4 rounded-xl border-2 transition-all duration-200 text-sm font-medium leading-tight group ${
+                          form.service === s.id
+                            ? 'border-brand-primary bg-brand-primary text-white shadow-lg shadow-brand-primary/20'
+                            : 'border-gray-100 bg-brand-bg text-brand-text hover:border-brand-primary/40 hover:bg-brand-primary/5'
+                        }`}
+                      >
+                        <span className="text-base mb-1 block">{s.icon}</span>
+                        <span className="text-xs font-semibold">{s.en}</span>
+                        {form.service === s.id && (
+                          <motion.div
+                            layoutId="service-check"
+                            className="absolute top-2 right-2 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center"
+                          >
+                            <CheckCircle className="w-3.5 h-3.5 text-white" />
+                          </motion.div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Section: Date & Time */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5" /> Date &amp; Time <span className="text-brand-accent">*</span>
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Date picker */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-3">
+                        Preferred Date
+                      </label>
+                      <input
+                        type="date"
+                        min={today}
+                        value={form.preferred_date}
+                        onChange={e => update('preferred_date', e.target.value)}
+                        className="w-full border-2 border-gray-100 bg-brand-bg rounded-xl px-4 py-3.5 text-sm text-brand-text focus:outline-none focus:border-brand-primary transition-colors"
+                      />
+                      <p className="text-[10px] text-gray-300 mt-2 ml-1">Mon – Sat · Sunday closed</p>
+                    </div>
+                    {/* Time slots */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-1.5">
+                        <Clock className="w-3 h-3" /> Preferred Time
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {TIME_SLOTS.map(t => (
+                          <button
+                            key={t}
+                            type="button"
+                            onClick={() => update('preferred_time', t)}
+                            className={`py-2.5 text-[11px] font-bold rounded-xl border-2 transition-all ${
+                              form.preferred_time === t
+                                ? 'bg-brand-accent border-brand-accent text-white shadow-md shadow-brand-accent/20'
+                                : 'border-gray-100 bg-brand-bg text-gray-500 hover:border-brand-accent/40 hover:text-brand-accent'
+                            }`}
+                          >
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section: Additional Notes */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
+                  <h2 className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-6 flex items-center gap-2">
+                    <MessageSquare className="w-3.5 h-3.5" /> Additional Notes{' '}
+                    <span className="text-gray-300 font-normal normal-case tracking-normal">(optional)</span>
+                  </h2>
+                  <textarea
+                    rows={4}
+                    value={form.message}
+                    onChange={e => update('message', e.target.value)}
+                    placeholder="Any allergies, concerns, or special requests you'd like us to know..."
+                    className="w-full px-4 py-3.5 rounded-xl border-2 border-gray-100 bg-brand-bg text-brand-text text-sm placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors resize-none"
+                  />
+                </div>
+
+                {/* Error message */}
+                <AnimatePresence>
+                  {error && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="text-red-500 text-sm bg-red-50 px-4 py-3 rounded-xl border border-red-100"
                     >
-                      Mon – Sat · Sunday closed
+                      {error}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              {/* ── RIGHT: Sticky summary sidebar ─────────────────── */}
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 0.6 }}
+                className="lg:col-span-2 space-y-5"
+              >
+                {/* Booking summary card */}
+                <div className="sticky top-[84px]">
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-5">
+                    <h3 className="text-xs font-bold tracking-widest uppercase text-gray-400 mb-5">
+                      Booking Summary
+                    </h3>
+
+                    <div className="space-y-4 mb-6">
+                      {/* Service */}
+                      <div className="flex items-start gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-brand-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                          <Sparkles className="w-4 h-4 text-brand-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">Service</p>
+                          <p className="text-sm font-semibold text-brand-text">
+                            {selectedService ? selectedService.en : <span className="text-gray-300 font-normal">Not selected</span>}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Date */}
+                      <div className="flex items-start gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-brand-accent/10 flex items-center justify-center shrink-0 mt-0.5">
+                          <Calendar className="w-4 h-4 text-brand-accent" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">Date</p>
+                          <p className="text-sm font-semibold text-brand-text">
+                            {form.preferred_date || <span className="text-gray-300 font-normal">Not selected</span>}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Time */}
+                      <div className="flex items-start gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-brand-accent/10 flex items-center justify-center shrink-0 mt-0.5">
+                          <Clock className="w-4 h-4 text-brand-accent" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">Time</p>
+                          <p className="text-sm font-semibold text-brand-text">
+                            {form.preferred_time || <span className="text-gray-300 font-normal">Not selected</span>}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Patient */}
+                      {form.full_name && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          className="flex items-start gap-3"
+                        >
+                          <div className="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center shrink-0 mt-0.5">
+                            <User className="w-4 h-4 text-gray-500" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">Patient</p>
+                            <p className="text-sm font-semibold text-brand-text">{form.full_name}</p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Divider */}
+                    <div className="h-px bg-gray-100 mb-6" />
+
+                    {/* Submit button */}
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full inline-flex items-center justify-center gap-3 px-6 py-4 bg-brand-primary text-white text-sm font-bold rounded-xl hover:bg-brand-primary/90 transition-all shadow-lg shadow-brand-primary/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {loading ? (
+                        <>
+                          <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="w-4 h-4" />
+                          Confirm Booking
+                        </>
+                      )}
+                    </button>
+
+                    <p className="text-[10px] text-gray-300 text-center mt-4 leading-relaxed">
+                      Our team will contact you within 24 hours to confirm your appointment.
                     </p>
                   </div>
-                  <div>
-                    <label className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-gray-400 mb-5">
-                      <Clock className="w-3.5 h-3.5 text-brand-accent" />
-                      <span data-en="Select Time" data-am="ሰዓት ይምረጡ">Select Time</span>
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {TIME_SLOTS.map(t => (
-                        <button
-                          key={t}
-                          onClick={() => update('preferred_time', t)}
-                          className={`py-3 text-xs font-semibold rounded-xl border-2 transition-all ${
-                            form.preferred_time === t
-                              ? 'bg-brand-primary border-brand-primary text-white shadow-md shadow-brand-primary/20'
-                              : 'border-gray-200 bg-white text-gray-500 hover:border-brand-primary/40 hover:text-brand-primary'
-                          }`}
-                        >
-                          {t}
-                        </button>
+
+                  {/* Clinic hours */}
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-5">
+                    <h3 className="text-xs font-bold tracking-widest uppercase text-gray-400 mb-4">Clinic Hours</h3>
+                    <div className="space-y-2">
+                      {[
+                        ['Mon – Fri', '8:00 AM – 6:00 PM'],
+                        ['Saturday', '9:00 AM – 3:00 PM'],
+                        ['Sunday', 'Closed'],
+                      ].map(([day, hrs]) => (
+                        <div key={day} className="flex justify-between items-center text-sm py-1.5 border-b border-gray-50 last:border-0">
+                          <span className="font-medium text-brand-text text-xs">{day}</span>
+                          <span className={`text-xs ${hrs === 'Closed' ? 'text-red-400' : 'text-gray-400'}`}>{hrs}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => goTo(1)}
-                    data-en="Back"
-                    data-am="ተመለስ"
-                    className="px-8 py-4 border-2 border-gray-200 text-brand-text text-xs font-bold tracking-widest uppercase rounded-full hover:bg-gray-50 transition-colors"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={() => goTo(3)}
-                    disabled={!form.preferred_date || !form.preferred_time}
-                    data-en="Continue"
-                    data-am="ቀጥል"
-                    className={`inline-flex items-center gap-3 px-8 py-4 text-xs font-bold tracking-widest uppercase rounded-full transition-all ${
-                      form.preferred_date && form.preferred_time
-                        ? 'bg-brand-accent text-white hover:bg-brand-accent/90 shadow-lg shadow-brand-accent/25'
-                        : 'bg-gray-100 text-gray-300 cursor-not-allowed'
-                    }`}
-                  >
-                    Continue <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </motion.div>
-            )}
 
-            {/* STEP 3 */}
-            {step === 3 && (
-              <motion.div key="step3" custom={dir} variants={slideVariants} initial="enter" animate="center" exit="exit">
-                <p
-                  className="text-xs font-bold tracking-widest uppercase text-brand-accent mb-5"
-                  data-en="Step 3 of 3"
-                  data-am="ደረጃ 3 ከ 3"
-                >
-                  Step 3 of 3
-                </p>
-                <h1
-                  className="font-serif text-5xl md:text-[4rem] text-brand-text mb-10 leading-tight"
-                  data-en="Your Details."
-                  data-am="የእርስዎ መረጃ።"
-                >
-                  Your Details.
-                </h1>
-
-                {/* Summary */}
-                <div className="bg-white border border-gray-100 rounded-2xl px-7 py-5 mb-8 flex flex-wrap gap-8">
-                  {[
-                    ['Service', 'አገልግሎት', selectedService?.en],
-                    ['Date', 'ቀን', form.preferred_date],
-                    ['Time', 'ሰዓት', form.preferred_time],
-                  ].map(([label, labelAm, val]) => (
-                    <div key={label}>
-                      <p
-                        className="text-[10px] font-bold tracking-widest uppercase text-gray-300 mb-1"
-                        data-en={label}
-                        data-am={labelAm}
-                      >
-                        {label}
-                      </p>
-                      <p className="text-sm font-semibold text-brand-text">{val}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-5 mb-5">
-                  <div>
-                    <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-2">
-                      <User className="w-3 h-3" />
-                      <span data-en="Full Name *" data-am="ሙሉ ስም *">Full Name *</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={form.full_name}
-                      onChange={e => update('full_name', e.target.value)}
-                      data-placeholder-en="Your full name"
-                      data-placeholder-am="ሙሉ ስምዎን ያስገቡ"
-                      placeholder="Your full name"
-                      className="w-full border-2 border-gray-200 bg-white rounded-xl px-5 py-4 text-sm text-brand-text placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-2">
-                      <Phone className="w-3 h-3" />
-                      <span data-en="Phone Number *" data-am="ስልክ ቁጥር *">Phone Number *</span>
-                    </label>
-                    <input
-                      type="tel"
-                      value={form.phone}
-                      onChange={e => update('phone', e.target.value)}
-                      data-placeholder-en="+251 9XX XXX XXX"
-                      data-placeholder-am="+251 9XX XXX XXX"
-                      placeholder="+251 9XX XXX XXX"
-                      className="w-full border-2 border-gray-200 bg-white rounded-xl px-5 py-4 text-sm text-brand-text placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
-                    />
+                  {/* Emergency */}
+                  <div className="bg-brand-primary rounded-2xl p-6 text-white">
+                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-60 mb-2">Emergency Line</p>
+                    <p className="text-xl font-serif font-bold mb-1">+251 11 XXX XXXX</p>
+                    <p className="text-xs opacity-50">Available for urgent dental care</p>
                   </div>
                 </div>
-                <div className="mb-5">
-                  <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-2">
-                    <Mail className="w-3 h-3" />
-                    <span data-en="Email Address *" data-am="ኢሜይል አድራሻ *">Email Address *</span>
-                  </label>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={e => update('email', e.target.value)}
-                    data-placeholder-en="your@email.com"
-                    data-placeholder-am="your@email.com"
-                    placeholder="your@email.com"
-                    className="w-full border-2 border-gray-200 bg-white rounded-xl px-5 py-4 text-sm text-brand-text placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
-                  />
-                </div>
-                <div className="mb-10">
-                  <label className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-400 mb-2">
-                    <MessageSquare className="w-3 h-3" />
-                    <span data-en="Additional Notes" data-am="ተጨማሪ ማስታወሻዎች">Additional Notes</span>
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={form.message}
-                    onChange={e => update('message', e.target.value)}
-                    data-placeholder-en="Any special concerns or questions..."
-                    data-placeholder-am="ማንኛውም ልዩ ጥያቄዎች ወይም አስተያየቶች..."
-                    placeholder="Any special concerns or questions..."
-                    className="w-full border-2 border-gray-200 bg-white rounded-xl px-5 py-4 text-sm text-brand-text placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors resize-none"
-                  />
-                </div>
-
-                {error && (
-                  <div className="mb-5 text-red-500 text-xs bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</div>
-                )}
-
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => goTo(2)}
-                    data-en="Back"
-                    data-am="ተመለስ"
-                    className="px-8 py-4 border-2 border-gray-200 text-brand-text text-xs font-bold tracking-widest uppercase rounded-full hover:bg-gray-50 transition-colors"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={handleSubmit}
-                    disabled={!form.full_name || !form.email || !form.phone || loading}
-                    className={`inline-flex items-center gap-3 px-8 py-4 text-xs font-bold tracking-widest uppercase rounded-full transition-all ${
-                      form.full_name && form.email && form.phone && !loading
-                        ? 'bg-brand-primary text-white hover:bg-brand-primary/90 shadow-lg shadow-brand-primary/25'
-                        : 'bg-gray-100 text-gray-300 cursor-not-allowed'
-                    }`}
-                  >
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        <span data-en="Submitting..." data-am="እየተላከ ነው...">Submitting...</span>
-                      </span>
-                    ) : (
-                      <>
-                        <CheckCircle className="w-4 h-4" />
-                        <span data-en="Confirm Booking" data-am="ቀጠሮ ያረጋግጡ">Confirm Booking</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-                <p
-                  className="text-[11px] text-gray-300 mt-5"
-                  data-en="Our team will contact you within 24 hours to confirm your appointment."
-                  data-am="ቡድናችን ቀጠሮዎን ለማረጋገጥ በ24 ሰዓት ውስጥ ያነጋግርዎታል።"
-                >
-                  Our team will contact you within 24 hours to confirm your appointment.
-                </p>
               </motion.div>
-            )}
-
-          </AnimatePresence>
+            </div>
+          </form>
         </div>
       </main>
     </div>
