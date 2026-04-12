@@ -37,13 +37,13 @@ export default function StaffLoginPage() {
 
   return (
     <main className="min-h-[100dvh] flex flex-col px-6 py-12 bg-brand-bg overflow-y-auto relative">
-      <Link 
-        href="/" 
+      <Link
+        href="/"
         className="absolute top-6 left-6 inline-flex items-center gap-2 px-4 py-2 bg-white text-gray-500 font-medium text-sm rounded-full border border-gray-200 hover:text-brand-primary hover:border-brand-primary transition-colors shadow-sm z-10"
       >
         ← Back to home
       </Link>
-      
+
       {/* Subtle background pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-brand-primary/5 blur-3xl" />

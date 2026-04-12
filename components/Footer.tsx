@@ -67,7 +67,7 @@ export default function Footer() {
             Staff Portal
           </Link>
 
-          <div 
+          <div
             className="text-[10px] text-gray-400 whitespace-nowrap"
             data-en={`© ${new Date().getFullYear()} Holistic Specialty Dental. Designed for Clinical Serenity.`}
             data-am={`© ${new Date().getFullYear()} Holistic Specialty Dental. ክሊኒካዊ በሆነ ጸጥታ የተነደፈ።`}

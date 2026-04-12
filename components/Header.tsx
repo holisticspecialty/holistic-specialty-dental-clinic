@@ -14,11 +14,11 @@ export default function Header() {
     const handleHashChange = () => {
       setHash(window.location.hash);
     };
-    
+
     requestAnimationFrame(() => {
       setHash(window.location.hash);
     });
-    
+
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
@@ -53,14 +53,14 @@ export default function Header() {
             <span className="font-bold">HOLISTIC</span> <span className="italic text-brand-accent">SPECIALTY</span>
           </span>
         </Link>
-        
+
         <nav className="hidden lg:flex items-center gap-8 text-[13px]">
           <Link href="/" className={getLinkClass('/')} data-en="Home" data-am="መነሻ">Home</Link>
           <Link href="/services" className={getLinkClass('/services')} data-en="Services" data-am="አገልግሎቶች">Services</Link>
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-          <Link 
+          <Link
             href="/booking"
             className="inline-flex items-center justify-center px-5.5 py-2.25 bg-brand-primary text-white text-[13px] font-medium rounded-full hover:bg-brand-primary/90 transition-colors"
             data-en="Book Your Appointment"
@@ -68,7 +68,7 @@ export default function Header() {
           >
             Book Your Appointment
           </Link>
-          <button 
+          <button
             id="lang-toggle"
             onClick={() => (window as any).swapLanguage && (window as any).swapLanguage()}
             className="flex items-center gap-1.5 text-[13px] font-medium text-gray-500 hover:text-brand-primary transition-colors"

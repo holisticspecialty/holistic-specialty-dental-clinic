@@ -131,11 +131,10 @@ export default function StaffPortalPage() {
             <button
               key={s}
               onClick={() => setFilter(s)}
-              className={`rounded-2xl p-5 text-left border transition-all ${
-                filter === s
+              className={`rounded-2xl p-5 text-left border transition-all ${filter === s
                   ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20'
                   : 'bg-white border-gray-100 hover:border-gray-200'
-              }`}
+                }`}
             >
               <div className={`text-2xl font-bold font-serif mb-1 ${filter === s ? 'text-white' : 'text-brand-text'}`}>
                 {counts[s]}
