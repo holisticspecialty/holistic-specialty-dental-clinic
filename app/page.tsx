@@ -22,7 +22,7 @@ const STAGGER = {
 };
 
 export default function Home() {
-  const [showMap, setShowMap] = useState(false);
+
 
   return (
     <main className="min-h-screen">
@@ -443,6 +443,20 @@ export default function Home() {
         </div>
       </section>
 
+      {/* MAP SECTION */}
+      <section className="w-full h-[65vh] min-h-[500px] relative bg-brand-bg flex items-center justify-center">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.407986708688!2d38.8502567!3d9.0104432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b9b00741a2227%3A0x88afef00fef09c8b!2sHolistic%20speciality%20dental%20clinic%20Addis%20Ababa!5e0!3m2!1sen!2set!4v1712475600000!5m2!1sen!2set" 
+          width="100%" 
+          height="100%" 
+          style={{ border: 0 }} 
+          allowFullScreen={true} 
+          loading="lazy" 
+          referrerPolicy="no-referrer-when-downgrade"
+          className="absolute inset-0 w-full h-full grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+        />
+      </section>
+
       {/* CONTACT SECTION */}
       <section id="contact" className="py-24 lg:py-32 px-6 md:px-12 bg-brand-bg">
         <div className="max-w-7xl mx-auto">
@@ -517,7 +531,7 @@ export default function Home() {
                 +251 93 201 1004
               </p>
             </motion.div>
-
+ 
             <motion.div variants={FADE_UP} className="flex flex-col items-center text-center p-8 bg-white rounded-sm shadow-sm border border-gray-50">
               <div className="w-12 h-12 rounded-full bg-brand-surface flex items-center justify-center mb-6">
                 <Clock className="w-5 h-5 text-brand-primary" />
@@ -539,7 +553,7 @@ export default function Home() {
               </p>
             </motion.div>
           </motion.div>
-
+ 
           <motion.div 
             initial="hidden"
             whileInView="show"
@@ -556,47 +570,8 @@ export default function Home() {
               Book your appointment
             </Link>
           </motion.div>
-
+ 
         </div>
-      </section>
-
-      {/* MAP SECTION */}
-      <section className="w-full h-[65vh] min-h-[500px] relative bg-brand-bg flex items-center justify-center">
-        {!showMap ? (
-          <div 
-            className="text-center cursor-pointer group flex flex-col items-center justify-center absolute inset-0 z-10 bg-brand-bg/50 backdrop-blur-sm"
-            onClick={() => setShowMap(true)}
-          >
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-              <MapPin className="w-8 h-8 text-brand-primary" />
-            </div>
-            <h3 
-              className="font-serif text-2xl text-brand-text mb-2"
-              data-en="View Clinic on Map"
-              data-am="ክሊኒኩን በካርታ ላይ ይመልከቱ"
-            >
-              View Clinic on Map
-            </h3>
-            <p 
-              className="text-brand-primary text-sm font-medium group-hover:underline"
-              data-en="Click to load interactive map"
-              data-am="በይነተገናኝ ካርታን ለመጫን ጠቅ ያድርጉ"
-            >
-              Click to load interactive map
-            </p>
-          </div>
-        ) : (
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.407986708688!2d38.8502567!3d9.0104432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b9b00741a2227%3A0x88afef00fef09c8b!2sHolistic%20speciality%20dental%20clinic%20Addis%20Ababa!5e0!3m2!1sen!2set!4v1712475600000!5m2!1sen!2set" 
-            width="100%" 
-            height="100%" 
-            style={{ border: 0 }} 
-            allowFullScreen={true} 
-            loading="lazy" 
-            referrerPolicy="no-referrer-when-downgrade"
-            className="absolute inset-0 w-full h-full grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
-          />
-        )}
       </section>
     </main>
   );
