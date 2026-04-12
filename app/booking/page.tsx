@@ -13,18 +13,22 @@ import { validateBookingForm, checkRateLimit, recordSubmission } from '@/lib/val
 
 /* ─── Data ─────────────────────────────────────────────────────────── */
 const SERVICES = [
-  { id: 'cosmetic',     en: 'Cosmetic Dentistry' },
-  { id: 'implants',     en: 'Dental Implants' },
-  { id: 'orthodontics', en: 'Orthodontics / Braces' },
-  { id: 'general',      en: 'General Care' },
-  { id: 'whitening',    en: 'Teeth Whitening' },
-  { id: 'rootcanal',    en: 'Root Canal' },
-  { id: 'cleaning',     en: 'Dental Cleaning' },
-  { id: 'emergency',    en: 'Emergency Care' },
-  { id: 'ozone',        en: 'Ozone Therapy' },
-  { id: 'amalgam',      en: 'Mercury-Safe Removal' },
-  { id: 'pediatric',    en: 'Pediatric Dentistry' },
-  { id: 'consultation', en: 'Consultation' },
+  { id: 'exam',         en: 'Oral Examination',        am: 'የአፍ ምርመራ' },
+  { id: 'general',      en: 'General Dentistry',      am: 'አጠቃላይ የጥርስ ሕክምና' },
+  { id: 'cleaning',     en: 'Scaling & Cleaning',      am: 'የጥርስ ጽዳት' },
+  { id: 'pediatric',    en: 'Pediatric Dentistry',    am: 'የሕፃናት የጥርስ ሕክምና' },
+  { id: 'xray',         en: 'Modern X-Ray Service',    am: 'ዘመናዊ የራጅ አገልግሎት' },
+  { id: 'lab',          en: 'Laboratory Service',      am: 'የላቦራቶሪ አገልግሎት' },
+  { id: 'fillings',     en: 'Fillings',               am: 'የጥርስ መሙላት' },
+  { id: 'crowns',       en: 'Crowns & Bridges',        am: 'ዘውድ እና ድልድይ' },
+  { id: 'rootcanal',    en: 'Root Canal Treatment',    am: 'የስር ቦይ ሕክምና' },
+  { id: 'implants',     en: 'Implant Service',         am: 'የጥርስ ንቅለ ተከላ' },
+  { id: 'whitening',    en: 'Teeth Whitening',        am: 'ጥርስን ነጭ ማድረግ' },
+  { id: 'invisible',    en: 'Invisible Brace',         am: 'የማይታይ የጥርስ ማስተካከያ' },
+  { id: 'ortho',        en: 'Orthodontics',           am: 'የጥርስ ማስተካከል' },
+  { id: 'veneers',      en: 'Veneers',                am: 'ቪኒየሮች' },
+  { id: 'extraction',   en: 'Extraction',             am: 'ጥርስ መንቀል' },
+  { id: 'periodontics', en: 'Periodontics',           am: 'የድድ ሕክምና' },
 ];
 
 const TIME_SLOTS = [

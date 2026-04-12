@@ -7,18 +7,22 @@ import { supabase } from '@/lib/supabase';
 import { validateBookingForm, checkRateLimit, recordSubmission } from '@/lib/validation';
 
 const SERVICES = [
-  'General Consultation',
-  'Teeth Whitening',
-  'Dental Implants',
-  'Orthodontics / Braces',
-  'Biological Dentistry',
-  'Root Canal (Biological)',
-  'Ozone Therapy',
-  'Mercury-Safe Amalgam Removal',
+  'Oral Examination',
+  'General Dentistry',
+  'Scaling & Cleaning',
   'Pediatric Dentistry',
-  'Cosmetic Dentistry',
-  'Periodontal Treatment',
-  'Emergency Dental Care',
+  'Modern X-Ray Service',
+  'Laboratory Service',
+  'Fillings',
+  'Crowns & Bridges',
+  'Root Canal Treatment',
+  'Implant Service',
+  'Teeth Whitening',
+  'Invisible Brace',
+  'Orthodontics',
+  'Veneers',
+  'Extraction',
+  'Periodontics',
 ];
 
 const TIMES = [
