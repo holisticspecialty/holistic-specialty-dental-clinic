@@ -96,28 +96,27 @@ export default function StaffPortalPage() {
     <main className="min-h-screen bg-brand-bg">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Image src="/logo.svg" alt="Logo" width={36} height={36} className="w-9 h-9" />
-            <div>
-              <span className="font-[family-name:var(--font-playfair)] text-[1rem] text-brand-primary font-bold">HOLISTIC</span>{' '}
-              <span className="font-[family-name:var(--font-playfair)] text-[1rem] italic text-brand-accent">SPECIALTY</span>
-              <div className="text-[10px] text-gray-400 uppercase tracking-widest -mt-0.5">Staff Portal</div>
-            </div>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2 md:gap-3">
+            <Image src="/logo.svg" alt="Logo" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9" />
+            <div className="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-semibold">Staff Portal</div>
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/" className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-gray-500 hover:text-brand-primary transition-colors border border-gray-200 rounded-full hover:border-brand-primary">
-              ← Home
+          <div className="flex items-center gap-2 md:gap-4">
+            <Link href="/" className="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:px-4 sm:py-2 text-xs font-medium text-gray-500 hover:text-brand-primary transition-colors border border-gray-200 rounded-full hover:border-brand-primary" title="Back to Home">
+              <span className="sm:hidden">←</span>
+              <span className="hidden sm:inline">← Home</span>
             </Link>
             <button onClick={fetchAppointments} className="p-2 hover:bg-gray-100 rounded-full transition-colors" title="Refresh">
               <RefreshCw className="w-4 h-4 text-gray-400" />
             </button>
-            <span className="hidden sm:block text-xs text-gray-400">{staffEmail}</span>
+            <span className="hidden lg:block text-xs text-gray-400">{staffEmail}</span>
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 hover:text-red-500 transition-colors border border-gray-200 rounded-full hover:border-red-200"
+              className="inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:px-3 sm:py-2 text-xs font-medium text-gray-500 hover:text-red-500 transition-colors border border-gray-200 rounded-full hover:border-red-200"
+              title="Sign Out"
             >
-              <LogOut className="w-3.5 h-3.5" /> Sign Out
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline ml-1.5">Sign Out</span>
             </button>
           </div>
         </div>
@@ -147,14 +146,14 @@ export default function StaffPortalPage() {
         </div>
 
         {/* Title */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="font-serif text-2xl text-brand-text">Appointments</h1>
             <p className="text-sm text-gray-400 mt-0.5">
               {filter === 'all' ? 'All bookings' : `Showing ${filter}`} · {filtered.length} record{filtered.length !== 1 ? 's' : ''}
             </p>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+          <div className="flex items-center gap-1.5 text-xs text-gray-400 shrink-0">
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             Live updates on
           </div>
