@@ -59,15 +59,17 @@ export default function Header() {
           <Link href="/services" className={getLinkClass('/services')} data-en="Services" data-am="አገልግሎቶች">Services</Link>
         </nav>
 
-        <div className="hidden md:flex items-center gap-4">
-          <Link
-            href="/booking"
-            className="inline-flex items-center justify-center px-5.5 py-2.25 bg-brand-primary text-white text-[13px] font-medium rounded-full hover:bg-brand-primary/90 transition-colors"
-            data-en="Book Your Appointment"
-            data-am="ቀጠሮ ይያዙ"
-          >
-            Book Your Appointment
-          </Link>
+        <div className="flex items-center gap-4">
+          <div className="hidden md:block">
+            <Link
+              href="/booking"
+              className="inline-flex items-center justify-center px-5.5 py-2.25 bg-brand-primary text-white text-[13px] font-medium rounded-full hover:bg-brand-primary/90 transition-colors"
+              data-en="Book Your Appointment"
+              data-am="ቀጠሮ ይያዙ"
+            >
+              Book Your Appointment
+            </Link>
+          </div>
           <button
             id="lang-toggle"
             onClick={() => (window as any).swapLanguage && (window as any).swapLanguage()}

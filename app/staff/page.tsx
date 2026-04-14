@@ -90,7 +90,7 @@ export default function StaffLoginPage() {
                   required
                   value={email}
                   onChange={e => { setEmail(e.target.value); setError(''); }}
-                  placeholder="staff@holisticdental.com"
+                  placeholder="you@email.com"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-brand-bg text-brand-text text-sm placeholder:text-gray-300 focus:outline-none focus:border-brand-primary transition-colors"
                 />
               </div>
